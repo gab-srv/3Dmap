@@ -240,8 +240,10 @@
             
             document.getElementById('info').textContent = "Loading 3D view...";
             
-            // Wait for CSS transition to complete
-            setTimeout(() => {
+            // Wait for CSS transition to complete using transitionend event
+            const onTransitionEnd = () => {
+                view3dElement.removeEventListener('transitionend', onTransitionEnd);
+                
                 const width = view3dElement.clientWidth;
                 const height = view3dElement.clientHeight;
                 console.log('3D View dimensions after reflow:', width, 'x', height);
@@ -253,7 +255,9 @@
                     console.error('Container dimensions invalid:', {width, height});
                     document.getElementById('info').textContent = "Error: Could not initialize 3D view";
                 }
-            }, 350);
+            };
+            
+            view3dElement.addEventListener('transitionend', onTransitionEnd);
         });
 
         function initThreeJS() {
