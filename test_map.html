@@ -257,7 +257,7 @@
 
         function create3DScene() {
             // Récupérer les coordonnées de l'itinéraire
-            const latLngs = drawnRoute.getLatLngs()[0];
+            const latLngs = drawnRoute.getLatLngs();
             
             // Centrer les coordonnées autour de (0,0) pour Three.js
             const centerLng = latLngs.reduce((sum, p) => sum + p.lng, 0) / latLngs.length;
