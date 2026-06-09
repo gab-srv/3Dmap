@@ -66,7 +66,7 @@
         }
         #3d-view {
             width: 100%;
-            height: 0;
+            height: 600px;
             border: 1px solid #ccc;
             border-radius: 8px;
             background-color: #f0f0f0;
@@ -76,7 +76,6 @@
         }
         #3d-view.visible {
             display: block;
-            height: 600px;
         }
         #info {
             text-align: center;
@@ -229,6 +228,9 @@
             mapElement.classList.add('hidden');
             view3dElement.classList.add('visible');
             
+            // Force reflow to apply CSS changes
+            void view3dElement.offsetHeight;
+            
             document.getElementById('draw-btn').style.display = 'none';
             document.getElementById('clear-btn').style.display = 'none';
             document.getElementById('3d-btn').style.display = 'none';
@@ -237,20 +239,18 @@
             
             document.getElementById('info').textContent = "Loading 3D view...";
             
-            // Initialize after a brief delay to ensure the DOM is ready
-            setTimeout(() => {
-                const width = view3dElement.clientWidth;
-                const height = view3dElement.clientHeight;
-                console.log('3D View dimensions:', width, 'x', height);
-                
-                if (width > 0 && height > 0) {
-                    initThreeJS();
-                    create3DScene();
-                } else {
-                    console.error('Container dimensions invalid:', {width, height});
-                    document.getElementById('info').textContent = "Error: Could not initialize 3D view";
-                }
-            }, 50);
+            // Now check dimensions after reflow is guaranteed
+            const width = view3dElement.clientWidth;
+            const height = view3dElement.clientHeight;
+            console.log('3D View dimensions:', width, 'x', height);
+            
+            if (width > 0 && height > 0) {
+                initThreeJS();
+                create3DScene();
+            } else {
+                console.error('Container dimensions invalid:', {width, height});
+                document.getElementById('info').textContent = "Error: Could not initialize 3D view";
+            }
         });
 
         function initThreeJS() {
